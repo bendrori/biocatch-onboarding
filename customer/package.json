@@ -1,0 +1,15 @@
+{
+  "name": "biocatch-proxy-worker",
+  "version": "1.0.0",
+  "description": "BioCatch edge proxy worker for customer deployment",
+  "main": "worker.ts",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail"
+  },
+  "keywords": ["biocatch", "cloudflare", "worker", "proxy"],
+  "private": true
+}
+
+
