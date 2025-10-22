@@ -46,7 +46,7 @@ export default function Home() {
                 Learn More
               </Link>
             </Button>
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/biocatchltd/edge-sdk-proxy/tree/main/edge/packages/vendors/cloudflare">
+            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bendrori/biocatch-onboarding/tree/main/customer">
               <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/>
             </a>
           </div>
