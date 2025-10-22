@@ -75,7 +75,7 @@ export function Step3IntegrationOptions() {
                   <Alert>
                     <Info className="h-4 w-4" />
                     <AlertDescription>
-                      You'll configure the specific settings for this option in the next step.
+                      You&apos;ll configure the specific settings for this option in the next step.
                     </AlertDescription>
                   </Alert>
                 </CardContent>

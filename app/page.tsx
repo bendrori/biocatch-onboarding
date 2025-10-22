@@ -35,10 +35,9 @@ export default function Home() {
             step-by-step UI guides in minutes. No manual setup required.
           </p>
           <div className="flex items-center justify-center gap-4 pt-6">
-            <Button asChild size="lg"
-                    className="text-lg px-10 py-7 rounded-xl shadow-lg hover:shadow-xl transition-all">
+            <Button asChild size="lg" className="text-lg px-10 py-7 rounded-xl shadow-lg hover:shadow-xl transition-all">
               <Link href="/wizard">
-                Start Integration <ArrowRight className="ml-2 h-5 w-5"/>
+                Start Integration <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-lg px-10 py-7 rounded-xl">
@@ -46,13 +45,10 @@ export default function Home() {
                 Learn More
               </Link>
             </Button>
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/bendrori/biocatch-onboarding/tree/main/customer">
-              <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare"/>
-            </a>
           </div>
           <div className="flex items-center justify-center gap-6 pt-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4"/>
+              <CheckCircle2 className="h-4 w-4" />
               <span>4 CDN Vendors</span>
             </div>
             <div className="flex items-center gap-2">
@@ -101,7 +97,7 @@ export default function Home() {
             <CardContent>
               <CardDescription className="text-base leading-relaxed text-gray-600">
                 Step-by-step dashboard instructions with exact button names,
-                menu locations, and visual guidance through each CDN's interface.
+                menu locations, and visual guidance through each CDN&apos;s interface.
               </CardDescription>
             </CardContent>
           </Card>

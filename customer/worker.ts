@@ -12,7 +12,7 @@ class SDKInjector {
     }
 
     element(el: Element) {
-        el.append(`<script>${this.script}</script>`, {html: true});
+        el.append(`<script>${this.script}</script>`, { html: true } as any);
     }
 }
 
@@ -22,7 +22,7 @@ export default {
             const reqForTelemetry = req.method === "POST" ? req.clone() : null;
             const res = await fetch(req);
             const path = new URL(req.url).pathname.toLowerCase();
-            const match = (kw) => {
+            const match = (kw: any) => {
                 if (!kw) {
                     // console.log("[match] kw is empty:", kw);
                     return false;

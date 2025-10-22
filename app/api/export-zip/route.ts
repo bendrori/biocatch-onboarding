@@ -116,10 +116,10 @@ Refer to INTEGRATION-GUIDE.md for troubleshooting and support information.
     zip.file("README.md", readme);
 
     // Generate ZIP buffer
-    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+    const zipBlob = await zip.generateAsync({ type: "blob" });
 
     // Return ZIP file
-    return new NextResponse(zipBuffer, {
+    return new NextResponse(zipBlob, {
       headers: {
         "Content-Type": "application/zip",
         "Content-Disposition": `attachment; filename="${clientName}-edge-integration.zip"`,
