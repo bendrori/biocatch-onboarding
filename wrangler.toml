@@ -6,3 +6,10 @@ compatibility_date = "2024-01-01"
 # This configuration applies to Cloudflare Pages deployments
 pages_build_output_dir = ".vercel/output/static"
 
+# Node.js compatibility for edge functions
+[env.production]
+compatibility_flags = ["nodejs_compat"]
+
+[env.preview]
+compatibility_flags = ["nodejs_compat"]
+
