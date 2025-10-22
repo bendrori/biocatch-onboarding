@@ -1,0 +1,33 @@
+# Cloudflare Pages ignore file
+# Exclude large cache files that exceed the 25 MiB limit
+
+# Next.js cache (can be large)
+.next/cache/
+
+# Node modules (already installed during build)
+node_modules/
+
+# Customer worker directory (separate deployment)
+customer/
+
+# Git files
+.git/
+.gitignore
+
+# IDE and local files
+.vscode/
+.idea/
+.DS_Store
+
+# Environment files
+.env*.local
+
+# Build logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
