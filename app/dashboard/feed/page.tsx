@@ -1,7 +1,10 @@
 "use client";
 
+import { useMemo, useState } from "react";
+import { format } from "date-fns";
+import { ExternalLink } from "lucide-react";
 import { EmptyState, ErrorState } from "@/components/dashboard/empty-state";
-import { PageHeader, PageShell } from "@/components/dashboard/page-header";
+import { PageContent, PageHeader } from "@/components/dashboard/page-header";
 import { SearchBar } from "@/components/dashboard/search-bar";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Badge } from "@/components/ui/badge";
@@ -10,9 +13,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { Document, Insight } from "@/lib/types";
-import { ExternalLink, Rss } from "lucide-react";
-import { format } from "date-fns";
-import { useMemo, useState } from "react";
 import { usePipelineStore } from "@/store/pipeline-store";
 
 export default function ResearchFeedPage() {
@@ -26,13 +26,11 @@ export default function ResearchFeedPage() {
       return res.json();
     });
 
-  const { data: insights, loading: insightsLoading } = useRefreshableData<Insight[]>(
-    async () => {
-      const res = await fetch("/api/insights");
-      if (!res.ok) throw new Error("Failed to load insights");
-      return res.json();
-    }
-  );
+  const { data: insights, loading: insightsLoading } = useRefreshableData<Insight[]>(async () => {
+    const res = await fetch("/api/insights");
+    if (!res.ok) throw new Error("Failed to load insights");
+    return res.json();
+  });
 
   const filteredDocs = useMemo(() => {
     if (!documents) return [];
@@ -49,34 +47,25 @@ export default function ResearchFeedPage() {
     if (!insights) return [];
     const q = search.toLowerCase();
     return insights.filter(
-      (i) =>
-        i.title.toLowerCase().includes(q) ||
-        i.type.toLowerCase().includes(q)
+      (i) => i.title.toLowerCase().includes(q) || i.type.toLowerCase().includes(q)
     );
   }, [insights, search]);
 
   if (docsError) {
     return (
-      <PageShell>
+      <PageContent>
         <ErrorState message={docsError} onRetry={refresh} />
-      </PageShell>
+      </PageContent>
     );
   }
 
   return (
-    <PageShell>
+    <PageContent>
       <PageHeader
-        eyebrow="Knowledge Collector"
-        icon={Rss}
-        title="Research Feed"
-        description="Newly collected documents and extracted detection insights from external and internal sources."
+        title="Research"
+        description="Collected documents and extracted detection insights."
       />
-
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        placeholder="Search documents and insights..."
-      />
+      <SearchBar value={search} onChange={setSearch} placeholder="Search research..." />
 
       <Tabs defaultValue="documents">
         <TabsList>
@@ -84,45 +73,35 @@ export default function ResearchFeedPage() {
           <TabsTrigger value="insights">Insights ({filteredInsights.length})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="documents" className="space-y-4">
+        <TabsContent value="documents" className="space-y-3">
           {docsLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-36 w-full" />
-            ))
+            Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)
           ) : filteredDocs.length === 0 ? (
             <EmptyState
-              title="No documents collected"
-              description="Run the daily pipeline to collect from GitHub, arXiv, Chrome Status, Playwright, and more."
+              title="No documents"
+              description="Run the daily pipeline to collect from external sources."
               actionLabel="Run Pipeline"
               onAction={runPipeline}
             />
           ) : (
-            filteredDocs.map((doc, i) => (
-              <Card
-                key={doc.id}
-                className="glass-card-hover group border-0 bg-transparent shadow-none animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.04}s` }}
-              >
-                <CardHeader className="pb-3">
+            filteredDocs.map((doc) => (
+              <Card key={doc.id}>
+                <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-2">
-                      <CardTitle className="text-base font-semibold leading-snug group-hover:text-foreground">
-                        {doc.title}
-                      </CardTitle>
-                      <CardDescription className="flex items-center gap-2 text-xs">
-                        <span className="font-medium text-foreground/70">{doc.source}</span>
-                        <span className="text-muted-foreground/50">·</span>
-                        {format(new Date(doc.publishedAt), "MMM d, yyyy")}
+                    <div>
+                      <CardTitle className="text-base font-medium leading-snug">{doc.title}</CardTitle>
+                      <CardDescription className="mt-1">
+                        {doc.source} · {format(new Date(doc.publishedAt), "MMM d, yyyy")}
                       </CardDescription>
                     </div>
                     <StatusBadge status={doc.sourceType === "external" ? "active" : "medium"} />
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm leading-relaxed text-muted-foreground">{doc.summary}</p>
-                  <div className="flex flex-wrap gap-1.5">
+                <CardContent className="space-y-3">
+                  <p className="text-sm text-muted-foreground">{doc.summary}</p>
+                  <div className="flex flex-wrap gap-1">
                     {doc.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-[11px] font-normal">
+                      <Badge key={tag} variant="secondary" className="text-[10px] font-normal">
                         {tag}
                       </Badge>
                     ))}
@@ -132,9 +111,9 @@ export default function ResearchFeedPage() {
                       href={doc.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-brand/80 transition-colors hover:text-brand"
+                      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
                     >
-                      View source <ExternalLink className="h-3 w-3" />
+                      Source <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
                 </CardContent>
@@ -143,42 +122,28 @@ export default function ResearchFeedPage() {
           )}
         </TabsContent>
 
-        <TabsContent value="insights" className="space-y-4">
+        <TabsContent value="insights" className="space-y-3">
           {insightsLoading ? (
-            Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-28 w-full" />
-            ))
+            <Skeleton className="h-24 w-full" />
           ) : filteredInsights.length === 0 ? (
-            <EmptyState
-              title="No insights extracted"
-              description="The Research Agent analyzes collected documents for detection opportunities."
-              actionLabel="Run Pipeline"
-              onAction={runPipeline}
-            />
+            <EmptyState title="No insights" description="Insights appear after the research agent processes documents." />
           ) : (
             filteredInsights.map((insight) => (
-              <Card key={insight.id} className="glass-card-hover border-0 bg-transparent shadow-none">
+              <Card key={insight.id}>
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-4">
-                    <CardTitle className="text-base">{insight.title}</CardTitle>
-                    <div className="flex h-8 min-w-8 items-center justify-center rounded-lg bg-brand/10 px-2 font-mono text-xs font-semibold text-brand">
+                    <CardTitle className="text-base font-medium">{insight.title}</CardTitle>
+                    <span className="font-mono text-xs text-muted-foreground">
                       {(insight.confidence * 100).toFixed(0)}%
-                    </div>
+                    </span>
                   </div>
-                  <CardDescription className="capitalize">
-                    {insight.type.replace(/_/g, " ")}
-                  </CardDescription>
+                  <CardDescription className="capitalize">{insight.type.replace(/_/g, " ")}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-sm leading-relaxed text-muted-foreground">{insight.description}</p>
-                  <div className="flex flex-wrap gap-2">
+                <CardContent className="space-y-2">
+                  <p className="text-sm text-muted-foreground">{insight.description}</p>
+                  <div className="flex flex-wrap gap-1.5">
                     <StatusBadge status={insight.businessImpact} />
                     <StatusBadge status={insight.engineeringDifficulty} />
-                    {insight.possibleSignals.map((s) => (
-                      <Badge key={s} variant="outline" className="font-mono text-[10px]">
-                        {s}
-                      </Badge>
-                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -186,6 +151,6 @@ export default function ResearchFeedPage() {
           )}
         </TabsContent>
       </Tabs>
-    </PageShell>
+    </PageContent>
   );
 }

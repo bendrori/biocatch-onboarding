@@ -16,11 +16,11 @@ export function SearchBar({
   className,
 }: SearchBarProps) {
   return (
-    <div className={cn("relative max-w-md", className)}>
-      <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className={cn("relative max-w-sm", className)}>
+      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         placeholder={placeholder}
-        className="h-11 rounded-xl border-white/[0.08] bg-white/[0.03] pl-10 shadow-none focus-visible:ring-brand/40"
+        className="h-9 pl-9"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-label={placeholder}

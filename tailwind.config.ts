@@ -11,9 +11,7 @@ const config: Config = {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       colors: {
@@ -22,13 +20,9 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        brand: {
-          DEFAULT: "hsl(var(--brand))",
-          muted: "hsl(var(--brand-muted))",
-        },
-        signal: {
-          DEFAULT: "hsl(var(--signal))",
-          muted: "hsl(var(--signal-muted))",
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -58,6 +52,9 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        info: "hsl(var(--info))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -67,11 +64,6 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
-      },
-      boxShadow: {
-        glow: "0 0 40px -10px hsl(var(--brand) / 0.4)",
-        "glow-sm": "0 0 20px -5px hsl(var(--brand) / 0.35)",
-        card: "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.6)",
       },
       keyframes: {
         "accordion-down": {
