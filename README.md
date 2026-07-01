@@ -1,4 +1,4 @@
-# BioCatch Innovation Lab (SignalForge)
+# BioCatch SDK Foundry
 
 Autonomous research and innovation platform that continuously discovers, analyzes, validates, and converts new signals into production-ready BioCatch detection capabilities.
 

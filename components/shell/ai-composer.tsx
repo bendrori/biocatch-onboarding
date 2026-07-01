@@ -27,7 +27,7 @@ export function AIComposer() {
             aria-label="Open AI composer"
           >
             <Sparkles className="h-4 w-4 shrink-0" />
-            <span>Ask SignalForge about signals, research, or run actions...</span>
+            <span>Ask SDK Foundry about signals, research, or run actions...</span>
             <kbd className="ml-auto hidden rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] sm:inline">
               /
             </kbd>

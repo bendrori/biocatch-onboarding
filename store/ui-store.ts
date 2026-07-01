@@ -24,7 +24,7 @@ export const useUIStore = create<UIStore>()(
       toggleComposer: () => set((s) => ({ composerExpanded: !s.composerExpanded })),
       setContextPanelOpen: (contextPanelOpen) => set({ contextPanelOpen }),
     }),
-    { name: "signalforge-ui" }
+    { name: "biocatch-sdk-foundry-ui" }
   )
 );
 

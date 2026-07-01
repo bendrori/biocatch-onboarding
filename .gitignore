@@ -36,8 +36,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# signalforge data
-/data/signalforge.json
+# biocatch-sdk-foundry data
+/data/biocatch-sdk-foundry.json
 
 
 # OpenNext

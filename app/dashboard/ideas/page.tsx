@@ -37,7 +37,7 @@ export default function SignalIdeasPage() {
       if (!res.ok) throw new Error();
       toast({ title: "Approved", description: `"${idea.title}" ready for PoC.` });
       refresh();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "Approval failed", variant: "destructive" });
     } finally {
@@ -70,7 +70,7 @@ export default function SignalIdeasPage() {
       if (!res.ok) throw new Error();
       toast({ title: "PoC generated" });
       refresh();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "PoC generation failed", variant: "destructive" });
     } finally {
@@ -89,7 +89,7 @@ export default function SignalIdeasPage() {
       if (!res.ok) throw new Error();
       toast({ title: "Validation complete" });
       refresh();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "Validation failed", variant: "destructive" });
     } finally {
@@ -108,7 +108,7 @@ export default function SignalIdeasPage() {
       if (!res.ok) throw new Error();
       toast({ title: "RFC generated" });
       refresh();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "RFC generation failed", variant: "destructive" });
     } finally {

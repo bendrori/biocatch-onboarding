@@ -95,7 +95,7 @@ export default function SignalCatalogPage() {
             : "Every catalog signal is already in the pipeline.",
       });
       refreshIdeas();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "Failed to add signals", variant: "destructive" });
     } finally {
@@ -114,7 +114,7 @@ export default function SignalCatalogPage() {
       if (!res.ok) throw new Error();
       toast({ title: "Added to pipeline", description: `"${signal.name}" queued for review.` });
       refreshIdeas();
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({ title: "Failed to add signal", variant: "destructive" });
     } finally {

@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BioCatch Innovation Lab | SignalForge",
+  title: "BioCatch SDK Foundry",
   description:
     "Autonomous research and innovation platform for detection signal discovery, validation, and production readiness.",
   robots: "noindex, nofollow",
