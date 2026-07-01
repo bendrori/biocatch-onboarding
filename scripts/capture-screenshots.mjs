@@ -10,6 +10,7 @@ const pages = [
   { name: "research-feed", path: "/dashboard/feed" },
   { name: "research-topics", path: "/dashboard/topics" },
   { name: "signal-ideas", path: "/dashboard/ideas" },
+  { name: "signal-catalog", path: "/dashboard/catalog" },
   { name: "validation-lab", path: "/dashboard/validation" },
   { name: "production-pipeline", path: "/dashboard/pipeline" },
   { name: "agent-team", path: "/dashboard/agents" },

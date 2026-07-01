@@ -6,6 +6,15 @@ export type Platform = "web" | "mobile_web" | "ios" | "android" | "edge" | "back
 export type CollectionLayer = "JS SDK" | "iOS SDK" | "Android SDK" | "CDN/Edge" | "Backend";
 export type SignalType = "behavioral" | "device" | "network" | "environmental" | "automation";
 
+export type SignalCategory =
+  | "behavioral_biometrics"
+  | "agentic_ai"
+  | "automation_bot"
+  | "device_hardware"
+  | "network_edge"
+  | "environmental"
+  | "fraud_pattern";
+
 export type InsightType =
   | "new_browser_api"
   | "new_mobile_api"
@@ -122,6 +131,23 @@ export interface SignalIdea {
   createdAt: string;
   approvedAt?: string;
   approvedBy?: string;
+}
+
+export interface CatalogSignal {
+  id: string;
+  name: string;
+  category: SignalCategory;
+  description: string;
+  signalType: SignalType;
+  platforms: Platform[];
+  collectionLayer: CollectionLayer;
+  requiredData: string[];
+  expectedValue: ImpactLevel;
+  falsePositiveRisk: ImpactLevel;
+  engineeringDifficulty: DifficultyLevel;
+  privacyRisk: ImpactLevel;
+  matchKeywords: string[];
+  scores: IdeaScores;
 }
 
 export interface IdeaScores {

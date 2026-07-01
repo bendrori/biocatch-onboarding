@@ -8,6 +8,7 @@ import {
   FlaskConical,
   GitBranch,
   Home,
+  Library,
   Lightbulb,
   Network,
   Play,
@@ -30,6 +31,7 @@ const navigation = [
   { label: "Home", href: "/dashboard", icon: Home },
   { label: "Research", href: "/dashboard/feed", icon: FileText },
   { label: "Signals", href: "/dashboard/ideas", icon: Lightbulb },
+  { label: "Signal Catalog", href: "/dashboard/catalog", icon: Library },
   { label: "Experiments", href: "/dashboard/validation?tab=pocs", icon: Beaker },
   { label: "Knowledge Graph", href: "/dashboard/topics", icon: Network },
   { label: "Validation", href: "/dashboard/validation?tab=results", icon: FlaskConical },
@@ -86,6 +88,10 @@ export function CommandPalette() {
           <CommandItem onSelect={() => run(() => router.push("/dashboard/ideas"))}>
             <Sparkles className="mr-2 h-4 w-4 text-muted-foreground" />
             Review Signal Ideas
+          </CommandItem>
+          <CommandItem onSelect={() => run(() => router.push("/dashboard/catalog"))}>
+            <Library className="mr-2 h-4 w-4 text-muted-foreground" />
+            Browse Signal Catalog
           </CommandItem>
           <CommandItem onSelect={() => run(() => router.push("/dashboard/pipeline"))}>
             <GitBranch className="mr-2 h-4 w-4 text-muted-foreground" />

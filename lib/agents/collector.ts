@@ -17,6 +17,7 @@ export const COLLECTOR_SOURCES: CollectorSource[] = [
   { name: "Fingerprint", url: "https://fingerprint.com/blog", type: "external" },
   { name: "DataDome", url: "https://datadome.co", type: "external" },
   { name: "HUMAN", url: "https://humansecurity.com", type: "external" },
+  { name: "Cloudflare", url: "https://blog.cloudflare.com", type: "external" },
   { name: "Hacker News", url: "https://news.ycombinator.com", type: "external" },
 ];
 
@@ -119,6 +120,72 @@ const SEED_DOCUMENTS: SeedDocument[] = [
       "Fingerprint Pro updates headless Chrome 128 detection using combination of Client Hints, WebGL, and timing analysis. Claims 94% accuracy on Playwright sessions.",
     summary: "Competitor Fingerprint updates headless detection — benchmark against our Playwright separation.",
     tags: ["competitor", "fingerprint", "headless", "playwright"],
+    sourceType: "external",
+  },
+  {
+    title: "arXiv: Continuous authentication via keystroke and mouse dynamics",
+    source: "arXiv",
+    url: "https://arxiv.org/abs/2606.20011",
+    publishedAt: "2026-06-18",
+    rawContent:
+      "Study shows keystroke dwell/flight timing and mouse velocity, acceleration, and curvature yield high-accuracy continuous authentication. Behavioral biometric drift reliably flags mid-session account takeover.",
+    summary: "Research validates keystroke and mouse dynamics as behavioral biometrics for continuous authentication and ATO detection.",
+    tags: ["research", "behavioral", "biometric", "keystroke", "mouse", "account takeover"],
+    sourceType: "external",
+  },
+  {
+    title: "W3C ships Device Motion and Sensor API updates for mobile web",
+    source: "Chrome Status",
+    url: "https://chromestatus.com/feature/devicemotion-2026",
+    publishedAt: "2026-06-12",
+    rawContent:
+      "New browser API surface exposes higher-resolution accelerometer and gyroscope streams on mobile web. Enables device-motion behavioral signals and emulator detection via missing sensor noise.",
+    summary: "New mobile sensor API enables device-motion biometrics and emulator detection.",
+    tags: ["chrome", "browser api", "mobile", "sensor", "accelerometer", "gyroscope"],
+    sourceType: "external",
+  },
+  {
+    title: "Cloudflare details TLS JA4 and HTTP/2 fingerprinting at the edge",
+    source: "Cloudflare",
+    url: "https://blog.cloudflare.com/ja4-http2-fingerprinting",
+    publishedAt: "2026-06-08",
+    rawContent:
+      "Cloudflare documents JA4 TLS ClientHello fingerprinting and HTTP/2 SETTINGS-frame analysis at the edge to catch clients whose TLS stack mismatches their claimed user-agent. Residential proxy and datacenter IP intelligence add reputation scoring.",
+    summary: "Edge TLS/JA4 and HTTP2 fingerprinting plus IP reputation for network-layer bot detection.",
+    tags: ["cloudflare", "edge", "cdn", "tls", "ja4", "http2", "proxy", "ip reputation"],
+    sourceType: "external",
+  },
+  {
+    title: "GitHub: Open-source canvas, WebGL and audio fingerprinting toolkit",
+    source: "GitHub",
+    url: "https://github.com/example/device-fingerprint-kit",
+    publishedAt: "2026-06-03",
+    rawContent:
+      "Toolkit combines canvas pixel hashing, WebGL vendor/renderer, audio context, and font enumeration into a stable device fingerprint. SwiftShader and llvmpipe renderers reliably expose virtualized automation environments.",
+    summary: "Device fingerprinting toolkit (canvas, WebGL, audio, fonts) surfaces virtualized bot environments.",
+    tags: ["github", "device fingerprint", "canvas", "webgl", "audio", "font"],
+    sourceType: "external",
+  },
+  {
+    title: "Internal: Bank C escalation — remote-access scam losses on mobile app",
+    source: "Salesforce",
+    url: "internal://salesforce/case/79120",
+    publishedAt: "2026-05-30",
+    rawContent:
+      "Bank C reports rising authorized push payment fraud from remote-access (AnyDesk/TeamViewer) and social-engineering scams. Victims are coached over the phone, showing long hesitation and dictated data entry on payment fields. Requesting screen-sharing and remote-control detection.",
+    summary: "Customer escalation — remote-access and social-engineering scam detection needed on mobile app.",
+    tags: ["customer", "scam", "remote access", "anydesk", "social engineering", "authorized push payment", "internal"],
+    sourceType: "external",
+  },
+  {
+    title: "Threat report: Residential-proxy credential stuffing and mule networks",
+    source: "HUMAN",
+    url: "https://humansecurity.com/threat/residential-proxy-2026",
+    publishedAt: "2026-05-25",
+    rawContent:
+      "Report describes large-scale credential stuffing over residential proxies feeding money-mule account networks. Attackers reuse devices across accounts and paste credentials, while mules show low data familiarity when managing beneficiaries.",
+    summary: "Credential stuffing over residential proxies feeding mule networks — device-sharing and familiarity signals apply.",
+    tags: ["threat", "credential stuffing", "proxy", "mule", "device sharing", "behavioral"],
     sourceType: "external",
   },
 ];

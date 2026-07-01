@@ -1,6 +1,10 @@
 import { collectDocuments } from "@/lib/agents/collector";
 import { correlateTopics } from "@/lib/agents/correlation-engine";
-import { generateIdeas } from "@/lib/agents/innovation-agent";
+import {
+  generateAllCatalogIdeas,
+  generateCatalogIdea,
+  generateIdeas,
+} from "@/lib/agents/innovation-agent";
 import { generatePoc } from "@/lib/agents/poc-generator";
 import { generateProductionArtifacts } from "@/lib/agents/production-agent";
 import { extractInsightsFromDocuments } from "@/lib/agents/research-agent";
@@ -71,6 +75,43 @@ export function runDailyPipeline(): PipelineResult {
       ideasAdded: newIdeas.length,
     },
   };
+}
+
+/**
+ * Materialize the entire signal catalog into pending ideas (idempotent: only
+ * adds catalog signals not already present). Covers the full detection-signal
+ * universe in addition to agentic-session detection.
+ */
+export function generateAllCatalogSignals(): { added: number } {
+  const current = db.read();
+  const existingTitles = current.signalIdeas.map((i) => i.title);
+  const newIdeas = generateAllCatalogIdeas(existingTitles);
+
+  if (newIdeas.length > 0) {
+    db.write((d) => ({ ...d, signalIdeas: [...newIdeas, ...d.signalIdeas] }));
+    addAuditLog(
+      "catalog_seeded",
+      "signal_idea",
+      "signal_catalog",
+      `Added ${newIdeas.length} catalog signals to the pipeline`
+    );
+  }
+
+  return { added: newIdeas.length };
+}
+
+/** Add a single catalog signal to the pipeline as a pending idea. */
+export function generateCatalogSignal(signalId: string): { ideaId: string } | null {
+  const current = db.read();
+  const idea = generateCatalogIdea(signalId);
+  if (!idea) return null;
+
+  const existing = current.signalIdeas.find((i) => i.title === idea.title);
+  if (existing) return { ideaId: existing.id };
+
+  db.write((d) => ({ ...d, signalIdeas: [idea, ...d.signalIdeas] }));
+  addAuditLog("catalog_signal_added", "signal_idea", idea.id, `Added "${idea.title}" from catalog`);
+  return { ideaId: idea.id };
 }
 
 export function approveIdea(ideaId: string, approvedBy: string): boolean {
@@ -227,6 +268,9 @@ export function getDashboardStats(): DashboardStats {
 
 export function seedInitialData(): void {
   const current = db.read();
-  if (current.documents.length > 0) return;
-  runDailyPipeline();
+  if (current.documents.length === 0) {
+    runDailyPipeline();
+  }
+  // Ensure the full detection-signal catalog is represented (idempotent).
+  generateAllCatalogSignals();
 }
