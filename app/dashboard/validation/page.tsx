@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState, ErrorState } from "@/components/dashboard/empty-state";
+import { PageHeader, PageShell } from "@/components/dashboard/page-header";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { Poc, SignalIdea, ValidationRun } from "@/lib/types";
-import { Code, Eye } from "lucide-react";
+import { Code, Eye, FlaskConical } from "lucide-react";
 import { useState } from "react";
 
 export default function ValidationLabPage() {
@@ -47,37 +48,33 @@ export default function ValidationLabPage() {
 
   if (error) {
     return (
-      <div className="p-8">
+      <PageShell>
         <ErrorState message={error} onRetry={refresh} />
-      </div>
+      </PageShell>
     );
   }
 
   const loading = valLoading || pocLoading;
 
   return (
-    <div className="space-y-6 p-8 animate-fade-in-up">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Validation Lab</h1>
-        <p className="text-muted-foreground">
-          PoC results and Playwright vs browser session validation metrics
-        </p>
-      </header>
+    <PageShell>
+      <PageHeader
+        eyebrow="Validation Agent"
+        icon={FlaskConical}
+        title="Validation Lab"
+        description="PoC results and Playwright vs browser session validation metrics."
+      />
 
       <Tabs defaultValue="results">
         <TabsList>
-          <TabsTrigger value="results">
-            Validation Results ({validations?.length ?? 0})
-          </TabsTrigger>
-          <TabsTrigger value="pocs">
-            Generated PoCs ({pocs?.length ?? 0})
-          </TabsTrigger>
+          <TabsTrigger value="results">Results ({validations?.length ?? 0})</TabsTrigger>
+          <TabsTrigger value="pocs">PoCs ({pocs?.length ?? 0})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="results" className="space-y-4 mt-6">
+        <TabsContent value="results" className="space-y-4">
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-40 rounded-xl" />
+              <Skeleton key={i} className="h-44 rounded-2xl" />
             ))
           ) : !validations?.length ? (
             <EmptyState
@@ -86,32 +83,27 @@ export default function ValidationLabPage() {
             />
           ) : (
             validations.map((v) => (
-              <Card key={v.id} className="rounded-xl">
+              <Card key={v.id} className="glass-card-hover border-0 bg-transparent shadow-none">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <CardTitle className="text-base">
-                        {getIdeaTitle(v.ideaId)}
-                      </CardTitle>
-                      <CardDescription>Validation run · {v.id}</CardDescription>
+                      <CardTitle className="text-base">{getIdeaTitle(v.ideaId)}</CardTitle>
+                      <CardDescription className="font-mono text-[11px]">{v.id}</CardDescription>
                     </div>
                     <StatusBadge status={v.recommendation} />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <Metric label="Accuracy" value={`${(v.accuracy * 100).toFixed(1)}%`} />
-                    <Metric label="False Positive Rate" value={`${(v.falsePositiveRate * 100).toFixed(1)}%`} />
-                    <Metric label="False Negative Rate" value={`${(v.falseNegativeRate * 100).toFixed(1)}%`} />
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <Metric label="Accuracy" value={`${(v.accuracy * 100).toFixed(1)}%`} good />
+                    <Metric label="False Positive" value={`${(v.falsePositiveRate * 100).toFixed(1)}%`} />
+                    <Metric label="False Negative" value={`${(v.falseNegativeRate * 100).toFixed(1)}%`} />
                     <Metric label="Latency" value={`${v.latencyMs}ms`} />
-                    <Metric label="Memory" value={`${v.memoryKb}KB`} />
-                    <Metric label="CPU Impact" value={v.cpuImpact} />
-                    <Metric label="Privacy Risk" value={v.privacyRisk} />
                   </div>
-                  <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
-                    <span>{v.sessionCounts.realBrowser} real browser sessions</span>
-                    <span>{v.sessionCounts.playwright} Playwright sessions</span>
-                    <span>{v.sessionCounts.puppeteer} Puppeteer sessions</span>
+                  <div className="mt-4 flex flex-wrap gap-4 text-[11px] text-muted-foreground">
+                    <span>{v.sessionCounts.realBrowser} browser</span>
+                    <span>{v.sessionCounts.playwright} Playwright</span>
+                    <span>{v.sessionCounts.puppeteer} Puppeteer</span>
                   </div>
                 </CardContent>
               </Card>
@@ -119,24 +111,24 @@ export default function ValidationLabPage() {
           )}
         </TabsContent>
 
-        <TabsContent value="pocs" className="space-y-4 mt-6">
+        <TabsContent value="pocs" className="space-y-4">
           {loading ? (
             Array.from({ length: 2 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 rounded-xl" />
+              <Skeleton key={i} className="h-32 rounded-2xl" />
             ))
           ) : !pocs?.length ? (
             <EmptyState
               title="No PoCs generated"
-              description="Approve a signal idea from the Signal Ideas page, then generate a JavaScript PoC."
+              description="Approve a signal idea, then generate a JavaScript PoC from the Signal Ideas page."
             />
           ) : (
             pocs.map((poc) => (
-              <Card key={poc.id} className="rounded-xl">
+              <Card key={poc.id} className="glass-card-hover border-0 bg-transparent shadow-none">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Code className="h-4 w-4" />
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <Code className="h-4 w-4 text-brand" />
                         {getIdeaTitle(poc.ideaId)}
                       </CardTitle>
                       <CardDescription>
@@ -148,14 +140,14 @@ export default function ValidationLabPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <p className="text-sm text-muted-foreground">{poc.instructions}</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {poc.files.map((f) => (
-                      <Badge key={f.path} variant="outline" className="font-mono text-xs">
+                      <Badge key={f.path} variant="outline" className="font-mono text-[10px]">
                         {f.path}
                       </Badge>
                     ))}
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => setViewPoc(poc)}>
+                  <Button variant="outline" size="sm" className="rounded-lg" onClick={() => setViewPoc(poc)}>
                     <Eye className="mr-2 h-4 w-4" /> View Code
                   </Button>
                 </CardContent>
@@ -166,12 +158,10 @@ export default function ValidationLabPage() {
       </Tabs>
 
       <Dialog open={!!viewPoc} onOpenChange={() => setViewPoc(null)}>
-        <DialogContent className="max-w-3xl max-h-[85vh]">
+        <DialogContent className="max-h-[85vh] max-w-3xl border-white/[0.08] bg-background/95 backdrop-blur-xl">
           <DialogHeader>
             <DialogTitle>PoC Code</DialogTitle>
-            <DialogDescription>
-              Sandbox-generated JavaScript signal code
-            </DialogDescription>
+            <DialogDescription>Sandbox-generated JavaScript signal</DialogDescription>
           </DialogHeader>
           {viewPoc && (
             <Tabs defaultValue={viewPoc.files[0]?.path}>
@@ -184,10 +174,8 @@ export default function ValidationLabPage() {
               </TabsList>
               {viewPoc.files.map((f) => (
                 <TabsContent key={f.path} value={f.path}>
-                  <ScrollArea className="h-[400px] rounded-lg border border-border">
-                    <pre className="p-4 text-xs font-mono whitespace-pre-wrap">
-                      {f.content}
-                    </pre>
+                  <ScrollArea className="h-[400px] rounded-xl border border-white/[0.06] bg-black/40">
+                    <pre className="p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap">{f.content}</pre>
                   </ScrollArea>
                 </TabsContent>
               ))}
@@ -195,15 +183,17 @@ export default function ValidationLabPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageShell>
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({ label, value, good }: { label: string; value: string; good?: boolean }) {
   return (
-    <div className="rounded-lg border border-border p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-lg font-semibold capitalize tabular-nums">{value}</p>
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className={`mt-1 font-mono text-xl font-semibold tabular-nums ${good ? "text-emerald-400" : ""}`}>
+        {value}
+      </p>
     </div>
   );
 }

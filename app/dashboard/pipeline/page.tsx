@@ -1,8 +1,8 @@
 "use client";
 
 import { EmptyState, ErrorState } from "@/components/dashboard/empty-state";
+import { PageHeader, PageShell } from "@/components/dashboard/page-header";
 import { ScoreBadge, StatusBadge } from "@/components/dashboard/status-badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { PipelineStage, ProductionArtifact, SignalIdea } from "@/lib/types";
-import { Eye } from "lucide-react";
+import { Eye, GitBranch } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -49,9 +49,9 @@ export default function ProductionPipelinePage() {
 
   if (error) {
     return (
-      <div className="p-8">
+      <PageShell>
         <ErrorState message={error} onRetry={refresh} />
-      </div>
+      </PageShell>
     );
   }
 
@@ -66,49 +66,46 @@ export default function ProductionPipelinePage() {
   );
 
   return (
-    <div className="space-y-6 p-8 animate-fade-in-up">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Production Pipeline</h1>
-        <p className="text-muted-foreground">
-          Ideas moving from research to production readiness
-        </p>
-      </header>
+    <PageShell>
+      <PageHeader
+        eyebrow="Production Readiness"
+        icon={GitBranch}
+        title="Production Pipeline"
+        description="Ideas moving from research to production readiness with human approval at every gate."
+      />
 
       {loading ? (
-        <Skeleton className="h-64 w-full rounded-xl" />
+        <Skeleton className="h-72 w-full rounded-2xl" />
       ) : items.length === 0 ? (
         <EmptyState
           title="Pipeline is empty"
           description="Run the daily pipeline to collect research and generate signal ideas."
         />
       ) : (
-        <div className="overflow-x-auto pb-4">
-          <div className="flex gap-4 min-w-max">
+        <div className="overflow-x-auto pb-2 -mx-2 px-2">
+          <div className="flex gap-3 min-w-max">
             {STAGES.map((stage) => (
-              <div key={stage} className="w-64 shrink-0">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-sm font-medium capitalize">
+              <div key={stage} className="w-60 shrink-0">
+                <div className="mb-3 flex items-center justify-between px-1">
+                  <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground capitalize">
                     {stage.replace(/_/g, " ")}
                   </h3>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-md bg-white/[0.06] px-1.5 font-mono text-[10px]">
                     {byStage[stage].length}
                   </span>
                 </div>
-                <div className="space-y-2 min-h-[200px] rounded-xl border border-border bg-card/50 p-3">
+                <div className="min-h-[220px] space-y-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2.5">
                   {byStage[stage].map((item) => (
-                    <Card key={item.id} className="rounded-lg shadow-sm">
-                      <CardContent className="p-3 space-y-2">
-                        <p className="text-xs font-medium leading-snug line-clamp-2">
-                          {item.title}
-                        </p>
-                        <div className="flex items-center justify-between">
-                          {item.score !== undefined && (
-                            <ScoreBadge score={item.score} />
-                          )}
-                          <StatusBadge status={item.status} />
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div
+                      key={item.id}
+                      className="rounded-xl border border-white/[0.06] bg-card/50 p-3 transition-all hover:border-white/[0.12] hover:bg-white/[0.03]"
+                    >
+                      <p className="text-xs font-medium leading-snug line-clamp-2">{item.title}</p>
+                      <div className="mt-2.5 flex items-center justify-between">
+                        {item.score !== undefined && <ScoreBadge score={item.score} />}
+                        <StatusBadge status={item.status} />
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -117,29 +114,28 @@ export default function ProductionPipelinePage() {
         </div>
       )}
 
-      <Card className="rounded-xl">
-        <CardHeader>
-          <CardTitle>Production Artifacts</CardTitle>
-          <CardDescription>RFCs, Jira epics, and implementation plans</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {!artifacts?.length ? (
-            <p className="text-sm text-muted-foreground">
-              No artifacts yet. Generate an RFC after validation passes.
-            </p>
-          ) : (
-            artifacts.map((artifact) => (
+      <div className="glass-card p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold">Production Artifacts</h3>
+          <p className="text-sm text-muted-foreground">RFCs, Jira epics, and implementation plans</p>
+        </div>
+        {!artifacts?.length ? (
+          <p className="text-sm text-muted-foreground">
+            No artifacts yet. Generate an RFC after validation passes.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {artifacts.map((artifact) => (
               <div
                 key={artifact.id}
                 className={cn(
-                  "flex items-center justify-between rounded-lg border border-border p-4",
-                  "hover:bg-accent/50 cursor-pointer transition-colors"
+                  "flex cursor-pointer items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all hover:border-white/[0.12] hover:bg-white/[0.04]"
                 )}
                 onClick={() => setViewArtifact(artifact)}
               >
                 <div>
-                  <p className="font-medium text-sm">{artifact.title}</p>
-                  <p className="text-xs text-muted-foreground capitalize">
+                  <p className="text-sm font-medium">{artifact.title}</p>
+                  <p className="text-xs capitalize text-muted-foreground">
                     {artifact.artifactType.replace(/_/g, " ")}
                   </p>
                 </div>
@@ -148,28 +144,28 @@ export default function ProductionPipelinePage() {
                   <Eye className="h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
+            ))}
+          </div>
+        )}
+      </div>
 
       <Dialog open={!!viewArtifact} onOpenChange={() => setViewArtifact(null)}>
-        <DialogContent className="max-w-3xl max-h-[85vh]">
+        <DialogContent className="max-h-[85vh] max-w-3xl border-white/[0.08] bg-background/95 backdrop-blur-xl">
           <DialogHeader>
             <DialogTitle>{viewArtifact?.title}</DialogTitle>
             <DialogDescription>
-              {viewArtifact?.artifactType.replace(/_/g, " ")} · Pending human approval
+              {viewArtifact?.artifactType.replace(/_/g, " ")} · Pending approval
             </DialogDescription>
           </DialogHeader>
           {viewArtifact && (
-            <ScrollArea className="h-[500px] rounded-lg border border-border">
-              <pre className="p-4 text-xs whitespace-pre-wrap font-mono">
+            <ScrollArea className="h-[500px] rounded-xl border border-white/[0.06] bg-black/40">
+              <pre className="p-4 font-mono text-xs leading-relaxed whitespace-pre-wrap">
                 {viewArtifact.content}
               </pre>
             </ScrollArea>
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageShell>
   );
 }

@@ -1,3 +1,4 @@
+import { AmbientBackground } from "@/components/dashboard/ambient-background";
 import { Sidebar } from "@/components/dashboard/sidebar";
 
 export default function DashboardLayout({
@@ -6,9 +7,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="relative flex min-h-screen bg-background">
+      <AmbientBackground />
       <Sidebar />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="relative flex-1 overflow-auto">{children}</main>
     </div>
   );
 }

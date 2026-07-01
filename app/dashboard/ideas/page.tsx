@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState, ErrorState } from "@/components/dashboard/empty-state";
+import { PageHeader, PageShell } from "@/components/dashboard/page-header";
 import { ScoreBadge, StatusBadge } from "@/components/dashboard/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { SignalIdea } from "@/lib/types";
-import { Check, Code, FileText, FlaskConical, MoreHorizontal, X } from "lucide-react";
+import { Check, Code, FileText, FlaskConical, Lightbulb, MoreHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import { usePipelineStore } from "@/store/pipeline-store";
 
@@ -138,25 +139,25 @@ export default function SignalIdeasPage() {
 
   if (error) {
     return (
-      <div className="p-8">
+      <PageShell>
         <ErrorState message={error} onRetry={refresh} />
-      </div>
+      </PageShell>
     );
   }
 
   const sorted = [...(ideas ?? [])].sort((a, b) => b.score - a.score);
 
   return (
-    <div className="space-y-6 p-8 animate-fade-in-up">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Signal Ideas</h1>
-        <p className="text-muted-foreground">
-          Ranked detection ideas with human approval gates
-        </p>
-      </header>
+    <PageShell>
+      <PageHeader
+        eyebrow="Innovation Agent"
+        icon={Lightbulb}
+        title="Signal Ideas"
+        description="Ranked detection ideas with human approval gates before PoC generation."
+      />
 
       {loading ? (
-        <Skeleton className="h-96 w-full rounded-xl" />
+        <Skeleton className="h-96 w-full rounded-2xl" />
       ) : sorted.length === 0 ? (
         <EmptyState
           title="No signal ideas yet"
@@ -165,7 +166,7 @@ export default function SignalIdeasPage() {
           onAction={runPipeline}
         />
       ) : (
-        <div className="rounded-xl border border-border">
+        <div className="glass-card overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -181,15 +182,15 @@ export default function SignalIdeasPage() {
               {sorted.map((idea) => (
                 <TableRow
                   key={idea.id}
-                  className="cursor-pointer"
+                  className="group cursor-pointer"
                   onClick={() => setSelectedIdea(idea)}
                 >
                   <TableCell>
                     <ScoreBadge score={idea.score} />
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium">{idea.title}</div>
-                    <div className="text-xs text-muted-foreground capitalize">
+                    <div className="font-medium group-hover:text-foreground">{idea.title}</div>
+                    <div className="mt-0.5 text-xs capitalize text-muted-foreground">
                       {idea.signalType} · {idea.expectedValue} value
                     </div>
                   </TableCell>
@@ -255,7 +256,7 @@ export default function SignalIdeasPage() {
       )}
 
       <Sheet open={!!selectedIdea} onOpenChange={() => setSelectedIdea(null)}>
-        <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+        <SheetContent className="w-full overflow-y-auto border-white/[0.08] bg-background/95 backdrop-blur-xl sm:max-w-xl">
           {selectedIdea && (
             <>
               <SheetHeader>
@@ -291,7 +292,7 @@ export default function SignalIdeasPage() {
                 {selectedIdea.status === "pending_review" && (
                   <div className="flex gap-2">
                     <Button
-                      className="flex-1"
+                      className="flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 border-0 hover:from-violet-500 hover:to-violet-400"
                       onClick={() => handleApprove(selectedIdea)}
                       disabled={actionLoading === selectedIdea.id}
                     >
@@ -311,6 +312,6 @@ export default function SignalIdeasPage() {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+    </PageShell>
   );
 }
