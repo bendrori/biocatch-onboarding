@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rejectIdea } from "@/lib/agents/orchestrator";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+
 
 export async function POST(
   request: NextRequest,

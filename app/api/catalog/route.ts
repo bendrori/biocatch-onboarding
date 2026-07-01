@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { CATEGORY_META, CATEGORY_ORDER, SIGNAL_CATALOG } from "@/lib/agents/signal-catalog";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+
 
 export function GET() {
   return NextResponse.json({

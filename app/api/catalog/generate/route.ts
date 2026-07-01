@@ -4,7 +4,9 @@ import {
   generateCatalogSignal,
 } from "@/lib/agents/orchestrator";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+
 
 export async function POST(request: Request) {
   let signalId: string | undefined;

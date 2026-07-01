@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import type {
   AuditLog,
   AgentRun,
@@ -12,9 +10,6 @@ import type {
   TopicDocument,
   ValidationRun,
 } from "@/lib/types";
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_FILE = path.join(DATA_DIR, "signalforge.json");
 
 interface Database {
   documents: Document[];
@@ -46,16 +41,6 @@ const globalStore = globalThis as typeof globalThis & {
   __signalforgeDb?: Database;
 };
 
-/** Cloudflare Workers have no persistent writable filesystem — use in-memory store. */
-function shouldUseMemoryStore(): boolean {
-  return (
-    process.env.CF_PAGES === "1" ||
-    process.env.CLOUDFLARE_PAGES === "1" ||
-    process.env.CF_WORKER === "1" ||
-    typeof (globalThis as { Cloudflare?: unknown }).Cloudflare !== "undefined"
-  );
-}
-
 function readMemoryDb(): Database {
   if (!globalStore.__signalforgeDb) {
     globalStore.__signalforgeDb = { ...emptyDb };
@@ -67,41 +52,53 @@ function writeMemoryDb(db: Database): void {
   globalStore.__signalforgeDb = db;
 }
 
-function canUseFilesystem(): boolean {
-  if (shouldUseMemoryStore()) return false;
+/** Best-effort disk persistence for local Node.js dev; skipped on Cloudflare Edge. */
+function tryPersistToDisk(db: Database): void {
   try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    const fs = require("fs") as typeof import("fs");
+    const path = require("path") as typeof import("path");
+    const dataDir = path.join(process.cwd(), "data");
+    const dbFile = path.join(dataDir, "signalforge.json");
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
     }
-    return true;
+    fs.writeFileSync(dbFile, JSON.stringify(db, null, 2));
   } catch {
-    return false;
+    // Edge runtime / read-only filesystem — in-memory only.
+  }
+}
+
+function tryLoadFromDisk(): Database | null {
+  try {
+    const fs = require("fs") as typeof import("fs");
+    const path = require("path") as typeof import("path");
+    const dbFile = path.join(process.cwd(), "data", "signalforge.json");
+    if (!fs.existsSync(dbFile)) return null;
+    const raw = fs.readFileSync(dbFile, "utf-8");
+    return { ...emptyDb, ...JSON.parse(raw) };
+  } catch {
+    return null;
   }
 }
 
 function ensureDb(): Database {
-  if (!canUseFilesystem()) {
-    return readMemoryDb();
+  const memory = readMemoryDb();
+  if (memory.documents.length > 0 || memory.signalIdeas.length > 0) {
+    return memory;
   }
 
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(emptyDb, null, 2));
-    return { ...emptyDb };
+  const fromDisk = tryLoadFromDisk();
+  if (fromDisk) {
+    writeMemoryDb(fromDisk);
+    return fromDisk;
   }
-  const raw = fs.readFileSync(DB_FILE, "utf-8");
-  return { ...emptyDb, ...JSON.parse(raw) };
+
+  return memory;
 }
 
 function saveDb(db: Database): void {
-  if (!canUseFilesystem()) {
-    writeMemoryDb(db);
-    return;
-  }
-
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+  writeMemoryDb(db);
+  tryPersistToDisk(db);
 }
 
 export function generateId(prefix: string): string {

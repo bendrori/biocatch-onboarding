@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { generatePocForIdea } from "@/lib/agents/orchestrator";
 import { db } from "@/lib/db/store";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+
 
 export async function POST(request: NextRequest) {
   const body = await request.json();

@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { getDashboardStats, runDailyPipeline, seedInitialData } from "@/lib/agents/orchestrator";
 import { db } from "@/lib/db/store";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+
 
 export async function GET() {
   seedInitialData();
