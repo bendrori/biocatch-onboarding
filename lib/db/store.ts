@@ -42,10 +42,48 @@ const emptyDb: Database = {
   agentRuns: [],
 };
 
-function ensureDb(): Database {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+const globalStore = globalThis as typeof globalThis & {
+  __signalforgeDb?: Database;
+};
+
+/** Cloudflare Workers have no persistent writable filesystem — use in-memory store. */
+function shouldUseMemoryStore(): boolean {
+  return (
+    process.env.CF_PAGES === "1" ||
+    process.env.CLOUDFLARE_PAGES === "1" ||
+    process.env.CF_WORKER === "1" ||
+    typeof (globalThis as { Cloudflare?: unknown }).Cloudflare !== "undefined"
+  );
+}
+
+function readMemoryDb(): Database {
+  if (!globalStore.__signalforgeDb) {
+    globalStore.__signalforgeDb = { ...emptyDb };
   }
+  return globalStore.__signalforgeDb;
+}
+
+function writeMemoryDb(db: Database): void {
+  globalStore.__signalforgeDb = db;
+}
+
+function canUseFilesystem(): boolean {
+  if (shouldUseMemoryStore()) return false;
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function ensureDb(): Database {
+  if (!canUseFilesystem()) {
+    return readMemoryDb();
+  }
+
   if (!fs.existsSync(DB_FILE)) {
     fs.writeFileSync(DB_FILE, JSON.stringify(emptyDb, null, 2));
     return { ...emptyDb };
@@ -55,6 +93,11 @@ function ensureDb(): Database {
 }
 
 function saveDb(db: Database): void {
+  if (!canUseFilesystem()) {
+    writeMemoryDb(db);
+    return;
+  }
+
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }

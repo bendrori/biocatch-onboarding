@@ -1,0 +1,14 @@
+# Cloudflare Pages — exclude large paths from upload
+.next/cache/
+node_modules/
+.git/
+.idea/
+.vscode/
+.DS_Store
+.env*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+.open-next/cache/
