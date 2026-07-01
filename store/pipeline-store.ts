@@ -24,7 +24,7 @@ export const usePipelineStore = create<PipelineStore>((set) => ({
         title: "Pipeline completed",
         description: data.agentRun.summary,
       });
-      window.dispatchEvent(new CustomEvent("signalforge:refresh"));
+      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
     } catch {
       toast({
         title: "Pipeline failed",

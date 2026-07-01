@@ -19,7 +19,7 @@ const titles: Record<string, string> = {
 function getTitle(pathname: string) {
   if (titles[pathname]) return titles[pathname];
   const match = Object.entries(titles).find(([path]) => pathname.startsWith(path) && path !== "/dashboard");
-  return match?.[1] ?? "SignalForge";
+  return match?.[1] ?? "SDK Foundry";
 }
 
 export function TopBar() {

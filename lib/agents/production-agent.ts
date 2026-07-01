@@ -16,7 +16,7 @@ export function generateRfc(idea: SignalIdea, validation?: ValidationRun): Produ
   const content = `# RFC: ${idea.title}
 
 **Status:** Draft — Pending Engineering Review
-**Author:** SignalForge Production Agent
+**Author:** BioCatch SDK Foundry Production Agent
 **Created:** ${now.split("T")[0]}
 **Collection Layer:** ${idea.collectionLayer}
 **Platforms:** ${idea.platforms.join(", ")}
@@ -144,7 +144,7 @@ ${idea.description}
 10. **[Docs]** Add release notes entry
 
 ## Labels
-signalforge, detection, ${idea.signalType}, ${idea.platforms.join(", ")}
+biocatch-sdk-foundry, detection, ${idea.signalType}, ${idea.platforms.join(", ")}
 
 ## Priority
 ${idea.expectedValue === "critical" ? "P0" : idea.expectedValue === "high" ? "P1" : "P2"}

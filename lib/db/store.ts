@@ -38,18 +38,18 @@ const emptyDb: Database = {
 };
 
 const globalStore = globalThis as typeof globalThis & {
-  __signalforgeDb?: Database;
+  __sdkFoundryDb?: Database;
 };
 
 function readMemoryDb(): Database {
-  if (!globalStore.__signalforgeDb) {
-    globalStore.__signalforgeDb = { ...emptyDb };
+  if (!globalStore.__sdkFoundryDb) {
+    globalStore.__sdkFoundryDb = { ...emptyDb };
   }
-  return globalStore.__signalforgeDb;
+  return globalStore.__sdkFoundryDb;
 }
 
 function writeMemoryDb(db: Database): void {
-  globalStore.__signalforgeDb = db;
+  globalStore.__sdkFoundryDb = db;
 }
 
 /** Best-effort disk persistence for local Node.js dev; skipped on Cloudflare Edge. */
@@ -58,7 +58,7 @@ function tryPersistToDisk(db: Database): void {
     const fs = require("fs") as typeof import("fs");
     const path = require("path") as typeof import("path");
     const dataDir = path.join(process.cwd(), "data");
-    const dbFile = path.join(dataDir, "signalforge.json");
+    const dbFile = path.join(dataDir, "biocatch-sdk-foundry.json");
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
@@ -72,7 +72,7 @@ function tryLoadFromDisk(): Database | null {
   try {
     const fs = require("fs") as typeof import("fs");
     const path = require("path") as typeof import("path");
-    const dbFile = path.join(process.cwd(), "data", "signalforge.json");
+    const dbFile = path.join(process.cwd(), "data", "biocatch-sdk-foundry.json");
     if (!fs.existsSync(dbFile)) return null;
     const raw = fs.readFileSync(dbFile, "utf-8");
     return { ...emptyDb, ...JSON.parse(raw) };

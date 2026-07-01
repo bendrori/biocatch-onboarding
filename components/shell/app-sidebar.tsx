@@ -68,9 +68,9 @@ export function AppSidebar() {
           {!sidebarCollapsed && (
             <Link href="/dashboard" className="flex items-center gap-2 truncate">
               <div className="flex h-6 w-6 items-center justify-center rounded-md bg-foreground text-background text-xs font-bold">
-                S
+                F
               </div>
-              <span className="text-sm font-medium truncate">SignalForge</span>
+              <span className="text-sm font-medium truncate">SDK Foundry</span>
             </Link>
           )}
           <Button

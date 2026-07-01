@@ -29,8 +29,8 @@ export function useRefreshableData<T>(
 
   useEffect(() => {
     const handler = () => load();
-    window.addEventListener("signalforge:refresh", handler);
-    return () => window.removeEventListener("signalforge:refresh", handler);
+    window.addEventListener("biocatch-sdk-foundry:refresh", handler);
+    return () => window.removeEventListener("biocatch-sdk-foundry:refresh", handler);
   }, [load]);
 
   return { data, loading, error, refresh: load };

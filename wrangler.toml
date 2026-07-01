@@ -1,6 +1,6 @@
 # Cloudflare Pages — @cloudflare/next-on-pages
 "$schema" = "./node_modules/wrangler/config-schema.json"
-name = "biocatch-onboarding"
+name = "biocatch-sdk-foundry"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
