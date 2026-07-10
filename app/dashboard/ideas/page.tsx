@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/use-toast";
-import { useRefreshableData } from "@/hooks/use-refreshable-data";
+import { dispatchRefresh, useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { SignalIdea } from "@/lib/types";
 import { Check } from "lucide-react";
 import { usePipelineStore } from "@/store/pipeline-store";
@@ -36,8 +36,7 @@ export default function SignalIdeasPage() {
       });
       if (!res.ok) throw new Error();
       toast({ title: "Approved", description: `"${idea.title}" ready for PoC.` });
-      refresh();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "Approval failed", variant: "destructive" });
     } finally {
@@ -51,7 +50,7 @@ export default function SignalIdeasPage() {
       const res = await fetch(`/api/ideas/${idea.id}/reject`, { method: "POST" });
       if (!res.ok) throw new Error();
       toast({ title: "Rejected" });
-      refresh();
+      dispatchRefresh();
     } catch {
       toast({ title: "Rejection failed", variant: "destructive" });
     } finally {
@@ -69,8 +68,7 @@ export default function SignalIdeasPage() {
       });
       if (!res.ok) throw new Error();
       toast({ title: "PoC generated" });
-      refresh();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "PoC generation failed", variant: "destructive" });
     } finally {
@@ -88,8 +86,7 @@ export default function SignalIdeasPage() {
       });
       if (!res.ok) throw new Error();
       toast({ title: "Validation complete" });
-      refresh();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "Validation failed", variant: "destructive" });
     } finally {
@@ -107,8 +104,7 @@ export default function SignalIdeasPage() {
       });
       if (!res.ok) throw new Error();
       toast({ title: "RFC generated" });
-      refresh();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "RFC generation failed", variant: "destructive" });
     } finally {

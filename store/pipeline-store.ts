@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { toast } from "@/components/ui/use-toast";
+import { dispatchRefresh } from "@/hooks/use-refreshable-data";
 
 interface PipelineStore {
   isRunning: boolean;
@@ -24,7 +25,7 @@ export const usePipelineStore = create<PipelineStore>((set) => ({
         title: "Pipeline completed",
         description: data.agentRun.summary,
       });
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({
         title: "Pipeline failed",
