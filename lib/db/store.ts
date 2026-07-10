@@ -24,6 +24,9 @@ interface Database {
   agentRuns: AgentRun[];
 }
 
+const DB_FILENAME = "biocatch-sdk-foundry.json";
+const LEGACY_DB_FILENAME = "signalforge.json";
+
 const emptyDb: Database = {
   documents: [],
   insights: [],
@@ -43,7 +46,7 @@ const globalStore = globalThis as typeof globalThis & {
 
 function readMemoryDb(): Database {
   if (!globalStore.__sdkFoundryDb) {
-    globalStore.__sdkFoundryDb = { ...emptyDb };
+    globalStore.__sdkFoundryDb = structuredClone(emptyDb);
   }
   return globalStore.__sdkFoundryDb;
 }
@@ -58,7 +61,7 @@ function tryPersistToDisk(db: Database): void {
     const fs = require("fs") as typeof import("fs");
     const path = require("path") as typeof import("path");
     const dataDir = path.join(process.cwd(), "data");
-    const dbFile = path.join(dataDir, "biocatch-sdk-foundry.json");
+    const dbFile = path.join(dataDir, DB_FILENAME);
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
@@ -72,9 +75,12 @@ function tryLoadFromDisk(): Database | null {
   try {
     const fs = require("fs") as typeof import("fs");
     const path = require("path") as typeof import("path");
-    const dbFile = path.join(process.cwd(), "data", "biocatch-sdk-foundry.json");
-    if (!fs.existsSync(dbFile)) return null;
-    const raw = fs.readFileSync(dbFile, "utf-8");
+    const dataDir = path.join(process.cwd(), "data");
+    const dbFile = path.join(dataDir, DB_FILENAME);
+    const legacyFile = path.join(dataDir, LEGACY_DB_FILENAME);
+    const fileToLoad = fs.existsSync(dbFile) ? dbFile : legacyFile;
+    if (!fs.existsSync(fileToLoad)) return null;
+    const raw = fs.readFileSync(fileToLoad, "utf-8");
     return { ...emptyDb, ...JSON.parse(raw) };
   } catch {
     return null;
@@ -118,7 +124,7 @@ export const db = {
   },
 
   reset(): void {
-    saveDb({ ...emptyDb });
+    saveDb(structuredClone(emptyDb));
   },
 };
 

@@ -2,6 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+export const REFRESH_EVENT = "biocatch-sdk-foundry:refresh" as const;
+
+export function dispatchRefresh(): void {
+  window.dispatchEvent(new CustomEvent(REFRESH_EVENT));
+}
+
 export function useRefreshableData<T>(
   fetcher: () => Promise<T>,
   deps: unknown[] = []
@@ -29,8 +35,8 @@ export function useRefreshableData<T>(
 
   useEffect(() => {
     const handler = () => load();
-    window.addEventListener("biocatch-sdk-foundry:refresh", handler);
-    return () => window.removeEventListener("biocatch-sdk-foundry:refresh", handler);
+    window.addEventListener(REFRESH_EVENT, handler);
+    return () => window.removeEventListener(REFRESH_EVENT, handler);
   }, [load]);
 
   return { data, loading, error, refresh: load };

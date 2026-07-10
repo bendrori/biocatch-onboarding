@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { computeIdeaScore } from "@/lib/scoring";
-import { useRefreshableData } from "@/hooks/use-refreshable-data";
+import { dispatchRefresh, useRefreshableData } from "@/hooks/use-refreshable-data";
 import type { CatalogSignal, SignalCategory, SignalIdea } from "@/lib/types";
 
 interface CatalogResponse {
@@ -39,7 +39,7 @@ export default function SignalCatalogPage() {
     return res.json();
   });
 
-  const { data: ideas, refresh: refreshIdeas } = useRefreshableData<SignalIdea[]>(async () => {
+  const { data: ideas } = useRefreshableData<SignalIdea[]>(async () => {
     const res = await fetch("/api/ideas");
     if (!res.ok) throw new Error("Failed to load ideas");
     return res.json();
@@ -94,8 +94,7 @@ export default function SignalCatalogPage() {
             ? `${data.added} new signals queued for review.`
             : "Every catalog signal is already in the pipeline.",
       });
-      refreshIdeas();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "Failed to add signals", variant: "destructive" });
     } finally {
@@ -113,8 +112,7 @@ export default function SignalCatalogPage() {
       });
       if (!res.ok) throw new Error();
       toast({ title: "Added to pipeline", description: `"${signal.name}" queued for review.` });
-      refreshIdeas();
-      window.dispatchEvent(new CustomEvent("biocatch-sdk-foundry:refresh"));
+      dispatchRefresh();
     } catch {
       toast({ title: "Failed to add signal", variant: "destructive" });
     } finally {
